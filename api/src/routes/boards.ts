@@ -13,9 +13,9 @@ export type CreateBoardInput = z.infer<typeof CreateBoardSchema>;
 
 const BoardIdParam = z.object({ id: z.string().uuid() });
 
-router.get('/', async (_req, res, next): Promise<void> => {
+router.get('/', async (req, res, next): Promise<void> => {
   try {
-    const boards = await prisma.board.findMany({ where: { ownerId: 'stub' } });
+    const boards = await prisma.board.findMany({ where: { ownerId: req.user!.id } });
     res.json({ success: true, data: boards });
   } catch (err) {
     next(err);
@@ -25,7 +25,7 @@ router.get('/', async (_req, res, next): Promise<void> => {
 router.post('/', async (req: Request<{}, {}, CreateBoardInput>, res, next): Promise<void> => {
   try {
     const { name } = CreateBoardSchema.parse(req.body);
-    const board = await prisma.board.create({ data: { name, ownerId: 'stub' } });
+    const board = await prisma.board.create({ data: { name, ownerId: req.user!.id } });
     res.status(201).json({ success: true, data: board });
   } catch (err) {
     next(err);

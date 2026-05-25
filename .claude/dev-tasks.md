@@ -253,38 +253,38 @@
 **Commit:** `week-01 complete: API, auth foundation, Prisma schema`
 
 #### Session A — Auth Route Scaffold + Schemas
-- [ ] Create `api/src/routes/auth.ts`
-- [ ] Define `RegisterSchema = z.object({ email: z.string().email(), password: z.string().min(8) })`
-- [ ] Define `LoginSchema = z.object({ email: z.string().email(), password: z.string() })`
-- [ ] Create `api/src/types/express.d.ts` — augment `express.Request` to include `user?: { id: string; email: string }`
+- [x] Create `api/src/routes/auth.ts`
+- [x] Define `RegisterSchema = z.object({ email: z.string().email(), password: z.string().min(8) })`
+- [x] Define `LoginSchema = z.object({ email: z.string().email(), password: z.string() })`
+- [x] Create `api/src/types/express.d.ts` — augment `express.Request` to include `user?: { id: string; email: string }`
 
 #### Session B — POST /auth/register
-- [ ] Check for existing user by email — throw `AppError(409, 'EMAIL_IN_USE')`
-- [ ] `const hashedPw = await bcrypt.hash(password, 12)`
-- [ ] `prisma.user.create({ data: { email, password: hashedPw } })`
-- [ ] Generate `accessToken`: `jwt.sign({ userId: user.id, email }, JWT_SECRET, { expiresIn: '15m' })`
-- [ ] Generate `refreshToken`: `jwt.sign({ userId: user.id, email, tokenId: randomUUID() }, JWT_SECRET, { expiresIn: '7d' })`
-- [ ] Return `res.status(201).json({ success: true, data: { accessToken, refreshToken } })`
+- [x] Check for existing user by email — throw `AppError(409, 'EMAIL_IN_USE')`
+- [x] `const hashedPw = await bcrypt.hash(password, 12)`
+- [x] `prisma.user.create({ data: { email, password: hashedPw } })`
+- [x] Generate `accessToken`: `jwt.sign({ userId: user.id, email }, JWT_SECRET, { expiresIn: '15m' })`
+- [x] Generate `refreshToken`: `jwt.sign({ userId: user.id, email, tokenId: randomUUID() }, JWT_SECRET, { expiresIn: '7d' })`
+- [x] Return `res.status(201).json({ success: true, data: { accessToken, refreshToken } })`
 
 #### Session C — POST /auth/login
-- [ ] Find user by email — if not found, throw `AppError(401, 'INVALID_CREDENTIALS')` (same message as wrong password — don't leak which)
-- [ ] `const match = await bcrypt.compare(password, user.password)` — if false, throw `AppError(401, 'INVALID_CREDENTIALS')`
-- [ ] Generate and return token pair (same shape as register)
+- [x] Find user by email — if not found, throw `AppError(401, 'INVALID_CREDENTIALS')` (same message as wrong password — don't leak which)
+- [x] `const match = await bcrypt.compare(password, user.password)` — if false, throw `AppError(401, 'INVALID_CREDENTIALS')`
+- [x] Generate and return token pair (same shape as register)
 
 #### Session D — authenticate Middleware
-- [ ] Create `api/src/middleware/authenticate.ts`
-- [ ] Extract `Authorization` header — throw `AppError(401, 'UNAUTHORIZED')` if missing or not `Bearer`
-- [ ] `const payload = jwt.verify(token, JWT_SECRET) as { userId: string; email: string }` — throw `AppError(401)` on failure
-- [ ] `req.user = { id: payload.userId, email: payload.email }`; call `next()`
-- [ ] Apply `authenticate` middleware to boards and tasks routers in `app.ts`
-- [ ] Test: `GET /tasks` without token → 401; with valid token → continues
+- [x] Create `api/src/middleware/authenticate.ts`
+- [x] Extract `Authorization` header — throw `AppError(401, 'UNAUTHORIZED')` if missing or not `Bearer`
+- [x] `const payload = jwt.verify(token, JWT_SECRET) as { userId: string; email: string }` — throw `AppError(401)` on failure
+- [x] `req.user = { id: payload.userId, email: payload.email }`; call `next()`
+- [x] Apply `authenticate` middleware to boards and tasks routers in `app.ts`
+- [x] Test: `GET /tasks` without token → 401; with valid token → continues
 
 #### Session E — AuditLog Writes + Week 1 Checklist
-- [ ] In `POST /tasks` handler: after create, add `prisma.auditLog.create({ data: { userId: req.user!.id, action: 'CREATED', entity: 'Task', entityId: task.id } })`
-- [ ] Same in `PATCH /tasks/:id` (action: 'UPDATED') and `DELETE /tasks/:id` (action: 'DELETED')
-- [ ] Wire `req.user.id` into boards routes for `ownerId` (replacing 'stub')
-- [ ] Week 1 checklist: docker up ✓, tsc passes ✓, task routes work ✓, board routes work ✓, register/login return tokens ✓, 401 on unauth ✓, AuditLog records created ✓
-- [ ] Push commit
+- [x] In `POST /tasks` handler: after create, add `prisma.auditLog.create({ data: { userId: req.user!.id, action: 'CREATED', entity: 'Task', entityId: task.id } })`
+- [x] Same in `PATCH /tasks/:id` (action: 'UPDATED') and `DELETE /tasks/:id` (action: 'DELETED')
+- [x] Wire `req.user.id` into boards routes for `ownerId` (replacing 'stub')
+- [x] Week 1 checklist: docker up ✓, tsc passes ✓, task routes work ✓, board routes work ✓, register/login return tokens ✓, 401 on unauth ✓, AuditLog records created ✓
+- [x] Push commit
 
 ---
 
