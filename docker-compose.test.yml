@@ -1,0 +1,4 @@
+services:
+  api:
+    environment:
+      DATABASE_URL: postgresql://postgres:password@db:5432/flowboard_test
