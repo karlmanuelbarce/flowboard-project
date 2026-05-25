@@ -7,11 +7,11 @@ const config: Config = {
   coverageDirectory: 'coverage',
   collectCoverageFrom: ['src/**/*.ts', '!src/index.ts'],
   globalSetup: './tests/globalSetup.ts',
-  globals: {
-    'ts-jest': {
-      tsconfig: 'tsconfig.test.json',
-    },
+  transform: {
+    '^.+\\.tsx?$': ['ts-jest', { tsconfig: 'tsconfig.test.json' }],
   },
+  moduleDirectories: ['node_modules'],
+  forceExit: true,
 };
 
 export default config;
