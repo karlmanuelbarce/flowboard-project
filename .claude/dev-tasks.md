@@ -297,36 +297,36 @@
 **Commit:** `day-06: Redis client, rate limiter middleware`
 
 #### Session A — Redis Client
-- [ ] Create `api/src/lib/redis.ts`
-- [ ] `import Redis from 'ioredis'; const redis = new Redis({ host: process.env.REDIS_HOST ?? 'redis', port: Number(process.env.REDIS_PORT) ?? 6379 });`
-- [ ] `redis.on('error', (err) => console.error('Redis error:', err))` — does NOT crash the process
-- [ ] `export default redis;`
-- [ ] Verify: `docker compose exec redis redis-cli PING` → `PONG`
+- [x] Create `api/src/lib/redis.ts`
+- [x] `import Redis from 'ioredis'; const redis = new Redis({ host: process.env.REDIS_HOST ?? 'redis', port: Number(process.env.REDIS_PORT) ?? 6379 });`
+- [x] `redis.on('error', (err) => console.error('Redis error:', err))` — does NOT crash the process
+- [x] `export default redis;`
+- [x] Verify: `docker compose exec redis redis-cli PING` → `PONG`
 
 #### Session B — Rate Limiter Middleware
-- [ ] Create `api/src/middleware/rateLimiter.ts`
-- [ ] `const WINDOW_SECONDS = 15 * 60; const MAX_REQUESTS = 100;`
-- [ ] Key: `` `rate:${req.ip ?? 'unknown'}` ``
-- [ ] `const count = await redis.incr(key); if (count === 1) await redis.expire(key, WINDOW_SECONDS);`
-- [ ] `if (count > MAX_REQUESTS) throw new AppError('Too many requests', 429, 'RATE_LIMIT_EXCEEDED')`
+- [x] Create `api/src/middleware/rateLimiter.ts`
+- [x] `const WINDOW_SECONDS = 15 * 60; const MAX_REQUESTS = 100;`
+- [x] Key: `` `rate:${req.ip ?? 'unknown'}` ``
+- [x] `const count = await redis.incr(key); if (count === 1) await redis.expire(key, WINDOW_SECONDS);`
+- [x] `if (count > MAX_REQUESTS) throw new AppError('Too many requests', 429, 'RATE_LIMIT_EXCEEDED')`
 
 #### Session C — Apply to Auth Routes Only
-- [ ] Import `rateLimiter` in `auth.ts` (or in `app.ts` per-route)
-- [ ] Apply to `POST /auth/login` and `POST /auth/register` — NOT to refresh, logout, or any other route
-- [ ] Confirm `GET /health` is NOT rate limited
+- [x] Import `rateLimiter` in `auth.ts` (or in `app.ts` per-route)
+- [x] Apply to `POST /auth/login` and `POST /auth/register` — NOT to refresh, logout, or any other route
+- [x] Confirm `GET /health` is NOT rate limited
 
 #### Session D — Fail-Open Implementation
-- [ ] Wrap both Redis calls (`incr` and `expire`) in a single try/catch
-- [ ] On error: `console.warn('Rate limiter Redis error, failing open:', err); next(); return;`
-- [ ] Test: `docker compose stop redis` → make a login request → confirm 200/401 (not 500)
-- [ ] `docker compose start redis`
+- [x] Wrap both Redis calls (`incr` and `expire`) in a single try/catch
+- [x] On error: `console.warn('Rate limiter Redis error, failing open:', err); next(); return;`
+- [x] Test: `docker compose stop redis` → make a login request → confirm 200/401 (not 500)
+- [x] `docker compose start redis`
 
 #### Session E — Rate Limit Test + Redis Verification
-- [ ] Loop 101 requests to `POST /auth/login`: `for i in $(seq 101); do curl -s -o /dev/null -w "%{http_code}\n" -X POST http://localhost/auth/login -H "Content-Type: application/json" -d '{}'; done`
-- [ ] Confirm requests 1–100 return 400/401 (not 429), request 101 returns 429
-- [ ] `docker compose exec redis redis-cli KEYS "rate:*"` — confirm keys exist
-- [ ] `docker compose exec api npx tsc --noEmit` — zero errors
-- [ ] Push commit
+- [x] Loop 101 requests to `POST /auth/login`: `for i in $(seq 101); do curl -s -o /dev/null -w "%{http_code}\n" -X POST http://localhost/auth/login -H "Content-Type: application/json" -d '{}'; done`
+- [x] Confirm requests 1–100 return 400/401 (not 429), request 101 returns 429
+- [x] `docker compose exec redis redis-cli KEYS "rate:*"` — confirm keys exist
+- [x] `docker compose exec api npx tsc --noEmit` — zero errors
+- [x] Push commit
 
 ---
 

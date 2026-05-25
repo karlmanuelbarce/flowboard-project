@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../lib/prisma';
 import { AppError } from '../errors/AppError';
+import { rateLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
@@ -23,7 +24,7 @@ export const LoginSchema = z.object({
 export type RegisterInput = z.infer<typeof RegisterSchema>;
 export type LoginInput = z.infer<typeof LoginSchema>;
 
-router.post('/register', async (req: Request<{}, {}, RegisterInput>, res, next): Promise<void> => {
+router.post('/register', rateLimiter, async (req: Request<{}, {}, RegisterInput>, res, next): Promise<void> => {
   try {
     const { email, password } = RegisterSchema.parse(req.body);
 
@@ -50,7 +51,7 @@ router.post('/register', async (req: Request<{}, {}, RegisterInput>, res, next):
   }
 });
 
-router.post('/login', async (req: Request<{}, {}, LoginInput>, res, next): Promise<void> => {
+router.post('/login', rateLimiter, async (req: Request<{}, {}, LoginInput>, res, next): Promise<void> => {
   try {
     const { email, password } = LoginSchema.parse(req.body);
 
