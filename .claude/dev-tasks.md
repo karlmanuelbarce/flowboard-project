@@ -172,40 +172,40 @@
 **Commit:** `day-03: prisma schema, migration, seed data`
 
 #### Session A — schema.prisma
-- [ ] Create `api/prisma/schema.prisma`
-- [ ] Add generator block: `provider = "prisma-client-js"`
-- [ ] Add datasource block: `provider = "postgresql"`, `url = env("DATABASE_URL")`
-- [ ] Model `User`: id (uuid), email (unique), password, createdAt (now), boards Board[], auditLogs AuditLog[]
-- [ ] Model `Board`: id (uuid), name, ownerId, owner (relation to User), tasks Task[], createdAt (now)
-- [ ] Model `Task`: id (uuid), title, description?, status (default TODO), priority (default MEDIUM), boardId, board (relation), createdAt (now), updatedAt (@updatedAt)
-- [ ] Model `AuditLog`: id (uuid), userId, user (relation), action, entity, entityId, createdAt (now)
-- [ ] Enum `TaskStatus { TODO IN_PROGRESS REVIEW DONE }`
-- [ ] Enum `Priority { LOW MEDIUM HIGH }`
+- [x] Create `api/prisma/schema.prisma`
+- [x] Add generator block: `provider = "prisma-client-js"`
+- [x] Add datasource block: `provider = "postgresql"`, `url = env("DATABASE_URL")`
+- [x] Model `User`: id (uuid), email (unique), password, createdAt (now), boards Board[], auditLogs AuditLog[]
+- [x] Model `Board`: id (uuid), name, ownerId, owner (relation to User), tasks Task[], createdAt (now)
+- [x] Model `Task`: id (uuid), title, description?, status (default TODO), priority (default MEDIUM), boardId, board (relation), createdAt (now), updatedAt (@updatedAt)
+- [x] Model `AuditLog`: id (uuid), userId, user (relation), action, entity, entityId, createdAt (now)
+- [x] Enum `TaskStatus { TODO IN_PROGRESS REVIEW DONE }`
+- [x] Enum `Priority { LOW MEDIUM HIGH }`
 
 #### Session B — Migration
-- [ ] `docker compose exec api npx prisma migrate dev --name init`
-- [ ] Confirm: no errors in output; `api/prisma/migrations/` folder created
-- [ ] If migration fails: check `DATABASE_URL` in `.env` and that `db` container is healthy
+- [x] `docker compose exec api npx prisma migrate dev --name init`
+- [x] Confirm: no errors in output; `api/prisma/migrations/` folder created
+- [x] If migration fails: check `DATABASE_URL` in `.env` and that `db` container is healthy
 
 #### Session C — Generate Client
-- [ ] `docker compose exec api npx prisma generate`
-- [ ] Confirm: `@prisma/client` types include `User`, `Board`, `Task`, `AuditLog`
-- [ ] Import `prisma` from `../lib/prisma` in `tasks.ts` — no TypeScript errors
+- [x] `docker compose exec api npx prisma generate`
+- [x] Confirm: `@prisma/client` types include `User`, `Board`, `Task`, `AuditLog`
+- [x] Import `prisma` from `../lib/prisma` in `tasks.ts` — no TypeScript errors
 
 #### Session D — Seed File
-- [ ] Create `api/prisma/seed.ts`
-- [ ] Import `PrismaClient` from `@prisma/client` and `bcrypt` from `bcrypt`
-- [ ] Hash password: `await bcrypt.hash('Dev1234!', 12)`
-- [ ] `prisma.user.upsert({ where: { email: 'dev@flowboard.test' }, update: {}, create: { email, password: hashedPw } })`
-- [ ] Create 2 boards owned by that user — upsert or clean up on repeated runs
-- [ ] Create 3 tasks on the first board
-- [ ] Add to `api/package.json`: `"prisma": { "seed": "ts-node prisma/seed.ts" }`
+- [x] Create `api/prisma/seed.ts`
+- [x] Import `PrismaClient` from `@prisma/client` and `bcrypt` from `bcrypt`
+- [x] Hash password: `await bcrypt.hash('Dev1234!', 12)`
+- [x] `prisma.user.upsert({ where: { email: 'dev@flowboard.test' }, update: {}, create: { email, password: hashedPw } })`
+- [x] Create 2 boards owned by that user — upsert or clean up on repeated runs
+- [x] Create 3 tasks on the first board
+- [x] Add to `api/package.json`: `"prisma": { "seed": "ts-node prisma/seed.ts" }`
 
 #### Session E — Verify
-- [ ] `docker compose exec api npx ts-node prisma/seed.ts` — no errors
-- [ ] `docker compose exec api npx prisma studio` — opens on port 5555
-- [ ] Confirm 1 user, 2 boards, 3 tasks in Studio
-- [ ] Push commit
+- [x] `docker compose exec api npx ts-node prisma/seed.ts` — no errors
+- [x] `docker compose exec api npx prisma studio` — opens on port 5555
+- [x] Confirm 1 user, 2 boards, 3 tasks in Studio
+- [x] Push commit
 
 ---
 
