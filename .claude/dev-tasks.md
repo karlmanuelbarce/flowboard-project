@@ -214,37 +214,37 @@
 **Commit:** `day-04: boards CRUD, full route layer`
 
 #### Session A — GET /boards and POST /boards
-- [ ] Create `api/src/routes/boards.ts`
-- [ ] Define `const CreateBoardSchema = z.object({ name: z.string().min(1).max(255) })`
-- [ ] `GET /boards` — `prisma.board.findMany({ where: { ownerId: 'stub' } })` (owner wired Day 5)
-- [ ] `POST /boards` — parse body, `prisma.board.create({ data: { name, ownerId: 'stub' } })`, return 201
+- [x] Create `api/src/routes/boards.ts`
+- [x] Define `const CreateBoardSchema = z.object({ name: z.string().min(1).max(255) })`
+- [x] `GET /boards` — `prisma.board.findMany({ where: { ownerId: 'stub' } })` (owner wired Day 5)
+- [x] `POST /boards` — parse body, `prisma.board.create({ data: { name, ownerId: 'stub' } })`, return 201
 
 #### Session B — GET /boards/:id and DELETE /boards/:id
-- [ ] Define `const BoardIdParam = z.object({ id: z.string().uuid() })`
-- [ ] `GET /boards/:id` — findUnique, throw AppError 404 if null
-- [ ] `DELETE /boards/:id` — delete board, catch P2025, return 204
+- [x] Define `const BoardIdParam = z.object({ id: z.string().uuid() })`
+- [x] `GET /boards/:id` — findUnique, throw AppError 404 if null
+- [x] `DELETE /boards/:id` — delete board, catch P2025, return 204
 
 #### Session C — Mount All Routers in app.ts
-- [ ] Mount boards router: `app.use('/boards', boardsRouter)`
-- [ ] Mount placeholder auth router: `app.use('/auth', authRouter)` (empty router OK for now)
-- [ ] Mount placeholder health route: `app.get('/health', (_, res) => res.json({ status: 'ok' }))` (full impl Day 14)
-- [ ] Verify middleware order: `express.json()` → routes → `globalErrorHandler`
+- [x] Mount boards router: `app.use('/boards', boardsRouter)`
+- [x] Mount placeholder auth router: `app.use('/auth', authRouter)` (empty router OK for now)
+- [x] Mount placeholder health route: `app.get('/health', (_, res) => res.json({ status: 'ok' }))` (full impl Day 14)
+- [x] Verify middleware order: `express.json()` → routes → `globalErrorHandler`
 
 #### Session D — Manual Testing (Postman or Bruno)
-- [ ] `POST /tasks` — happy path → 201
-- [ ] `GET /tasks/:id` — happy path → 200
-- [ ] `GET /tasks/:id` with non-UUID param → 422
-- [ ] `GET /tasks/:id` with valid UUID, no record → 404
-- [ ] `POST /boards` — happy path → 201
-- [ ] `GET /boards/:id` — happy path → 200
-- [ ] `DELETE /boards/:id` — happy path → 204
+- [x] `POST /tasks` — happy path → 201
+- [x] `GET /tasks/:id` — happy path → 200
+- [x] `GET /tasks/:id` with non-UUID param → 422
+- [x] `GET /tasks/:id` with valid UUID, no record → 404
+- [x] `POST /boards` — happy path → 201
+- [x] `GET /boards/:id` — happy path → 200
+- [x] `DELETE /boards/:id` — happy path → 204
 
 #### Session E — Error Handler Smoke Test
-- [ ] Temporarily add route: `app.get('/err-test', () => { throw new AppError('deliberate', 404, 'TEST') })`
-- [ ] Call it — confirm `{ success: false, message: 'deliberate', code: 'TEST' }`
-- [ ] Temporarily add route: `app.get('/err-unknown', () => { throw new Error('unexpected') })`
-- [ ] Call it with `NODE_ENV=production` — confirm no stack trace in response body
-- [ ] Remove both test routes; push commit
+- [x] Temporarily add route: `app.get('/err-test', () => { throw new AppError('deliberate', 404, 'TEST') })`
+- [x] Call it — confirm `{ success: false, message: 'deliberate', code: 'TEST' }`
+- [x] Temporarily add route: `app.get('/err-unknown', () => { throw new Error('unexpected') })`
+- [x] Call it with `NODE_ENV=production` — confirm no stack trace in response body
+- [x] Remove both test routes; push commit
 
 ---
 
