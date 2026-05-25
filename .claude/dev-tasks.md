@@ -335,35 +335,35 @@
 **Commit:** `day-07: refresh token rotation, logout endpoint`
 
 #### Session A — Store Refresh Tokens in Redis
-- [ ] In `POST /auth/register`: after generating `refreshToken`, extract `tokenId` from the JWT payload
-- [ ] `await redis.set(\`refresh:${user.id}:${tokenId}\`, '1', 'EX', 7 * 24 * 60 * 60)`
-- [ ] Same in `POST /auth/login`
-- [ ] Verify: login, then `docker compose exec redis redis-cli KEYS "refresh:*"` — key exists
+- [x] In `POST /auth/register`: after generating `refreshToken`, extract `tokenId` from the JWT payload
+- [x] `await redis.set(\`refresh:${user.id}:${tokenId}\`, '1', 'EX', 7 * 24 * 60 * 60)`
+- [x] Same in `POST /auth/login`
+- [x] Verify: login, then `docker compose exec redis redis-cli KEYS "refresh:*"` — key exists
 
 #### Session B — POST /auth/refresh
-- [ ] Add to `auth.ts`: `const RefreshSchema = z.object({ refreshToken: z.string() })`
-- [ ] Parse body; `jwt.verify(refreshToken, JWT_SECRET)` — throw `AppError(401, 'INVALID_REFRESH_TOKEN')` on failure
-- [ ] `const exists = await redis.get(\`refresh:${payload.userId}:${payload.tokenId}\`)` — throw 401 if null
-- [ ] `await redis.del(\`refresh:${payload.userId}:${payload.tokenId}\`)` — delete BEFORE issuing new token
-- [ ] Generate new `accessToken` and `refreshToken` (new `tokenId`)
-- [ ] Store new refresh token in Redis with 7-day TTL
-- [ ] Return `{ success: true, data: { accessToken, refreshToken } }`
+- [x] Add to `auth.ts`: `const RefreshSchema = z.object({ refreshToken: z.string() })`
+- [x] Parse body; `jwt.verify(refreshToken, JWT_SECRET)` — throw `AppError(401, 'INVALID_REFRESH_TOKEN')` on failure
+- [x] `const exists = await redis.get(\`refresh:${payload.userId}:${payload.tokenId}\`)` — throw 401 if null
+- [x] `await redis.del(\`refresh:${payload.userId}:${payload.tokenId}\`)` — delete BEFORE issuing new token
+- [x] Generate new `accessToken` and `refreshToken` (new `tokenId`)
+- [x] Store new refresh token in Redis with 7-day TTL
+- [x] Return `{ success: true, data: { accessToken, refreshToken } }`
 
 #### Session C — POST /auth/logout
-- [ ] Parse request body for `refreshToken`; verify JWT to extract payload
-- [ ] `await redis.del(\`refresh:${payload.userId}:${payload.tokenId}\`)` — silent if key doesn't exist
-- [ ] Return `res.status(204).send()`
+- [x] Parse request body for `refreshToken`; verify JWT to extract payload
+- [x] `await redis.del(\`refresh:${payload.userId}:${payload.tokenId}\`)` — silent if key doesn't exist
+- [x] Return `res.status(204).send()`
 
 #### Session D — Replay Attack Test
-- [ ] Login → get `refreshToken`
-- [ ] Call `POST /auth/refresh` with token → 200, get new token pair
-- [ ] Call `POST /auth/refresh` with the **same original token again** → must return 401
-- [ ] Confirm the new refresh token from step 2 still works
+- [x] Login → get `refreshToken`
+- [x] Call `POST /auth/refresh` with token → 200, get new token pair
+- [x] Call `POST /auth/refresh` with the **same original token again** → must return 401
+- [x] Confirm the new refresh token from step 2 still works
 
 #### Session E — TTL Verification
-- [ ] `docker compose exec redis redis-cli TTL "refresh:<userId>:<tokenId>"` — value should be ~604800
-- [ ] `docker compose exec api npx tsc --noEmit` — zero errors
-- [ ] Push commit
+- [x] `docker compose exec redis redis-cli TTL "refresh:<userId>:<tokenId>"` — value should be ~604800
+- [x] `docker compose exec api npx tsc --noEmit` — zero errors
+- [x] Push commit
 
 ---
 
