@@ -410,57 +410,57 @@
 **Commit:** `day-09: integration test suite`
 
 #### Session A — Test Infrastructure
-- [ ] Create `docker-compose.test.yml`:
+- [x] Create `docker-compose.test.yml`:
   ```yaml
   services:
     api:
       environment:
         DATABASE_URL: postgresql://postgres:password@db:5432/flowboard_test
   ```
-- [ ] Confirm `jest.config.ts` exists with `preset: 'ts-jest'`, `testEnvironment: 'node'`
-- [ ] Add `setupFilesAfterFramework` to run `prisma.$connect()` before suite if needed
-- [ ] `docker compose -f docker-compose.test.yml exec api npx jest` — confirms runner works (0 tests ok)
+- [x] Confirm `jest.config.ts` exists with `preset: 'ts-jest'`, `testEnvironment: 'node'`
+- [x] Add `setupFilesAfterFramework` to run `prisma.$connect()` before suite if needed
+- [x] `docker compose -f docker-compose.test.yml exec api npx jest` — confirms runner works (0 tests ok)
 
 #### Session B — auth.test.ts
-- [ ] `beforeAll`: connect prisma; `afterAll`: `prisma.user.deleteMany(); prisma.$disconnect()`
-- [ ] `POST /auth/register` — 201, body has `accessToken` and `refreshToken`
-- [ ] `POST /auth/register` duplicate email — 409
-- [ ] `POST /auth/register` invalid email — 422
-- [ ] `POST /auth/login` — 200, tokens returned
-- [ ] `POST /auth/login` wrong password — 401
-- [ ] `POST /auth/login` unknown email — 401 (same message as wrong password)
-- [ ] `POST /auth/refresh` — 200, new token pair
-- [ ] `POST /auth/refresh` replay (same token twice) — 401 on second use
-- [ ] `POST /auth/logout` — 204
+- [x] `beforeAll`: connect prisma; `afterAll`: `prisma.user.deleteMany(); prisma.$disconnect()`
+- [x] `POST /auth/register` — 201, body has `accessToken` and `refreshToken`
+- [x] `POST /auth/register` duplicate email — 409
+- [x] `POST /auth/register` invalid email — 422
+- [x] `POST /auth/login` — 200, tokens returned
+- [x] `POST /auth/login` wrong password — 401
+- [x] `POST /auth/login` unknown email — 401 (same message as wrong password)
+- [x] `POST /auth/refresh` — 200, new token pair
+- [x] `POST /auth/refresh` replay (same token twice) — 401 on second use
+- [x] `POST /auth/logout` — 204
 
 #### Session C — tasks.test.ts
-- [ ] `beforeAll`: register user, get `authToken`; create a board, get `boardId`
-- [ ] `afterAll`: cleanup test data; `prisma.$disconnect()`
-- [ ] `POST /tasks` — 201, correct shape
-- [ ] `POST /tasks` missing `title` — 422
-- [ ] `POST /tasks` no auth header — 401
-- [ ] `GET /tasks/:id` — 200
-- [ ] `GET /tasks/:id` invalid UUID — 422
-- [ ] `GET /tasks/:id` valid UUID no record — 404
-- [ ] `PATCH /tasks/:id` — 200, updated fields reflected
-- [ ] `PATCH /tasks/:id` other user's task — register second user, get their token, attempt PATCH → 403
-- [ ] `DELETE /tasks/:id` — 204
-- [ ] `DELETE /tasks/:id` non-existent — 404
+- [x] `beforeAll`: register user, get `authToken`; create a board, get `boardId`
+- [x] `afterAll`: cleanup test data; `prisma.$disconnect()`
+- [x] `POST /tasks` — 201, correct shape
+- [x] `POST /tasks` missing `title` — 422
+- [x] `POST /tasks` no auth header — 401
+- [x] `GET /tasks/:id` — 200
+- [x] `GET /tasks/:id` invalid UUID — 422
+- [x] `GET /tasks/:id` valid UUID no record — 404
+- [x] `PATCH /tasks/:id` — 200, updated fields reflected
+- [ ] `PATCH /tasks/:id` other user's task — register second user, get their token, attempt PATCH → 403 *(test.todo — ownership implemented Day 11)*
+- [x] `DELETE /tasks/:id` — 204
+- [x] `DELETE /tasks/:id` non-existent — 404
 
 #### Session D — boards.test.ts
-- [ ] `POST /boards` — 201
-- [ ] `POST /boards` no auth — 401
-- [ ] `GET /boards` — 200, array scoped to req.user
-- [ ] `GET /boards/:id` — 200
-- [ ] `GET /boards/:id` other user's board — 403
-- [ ] `DELETE /boards/:id` — 204
-- [ ] `DELETE /boards/:id` other user's board — 403
+- [x] `POST /boards` — 201
+- [x] `POST /boards` no auth — 401
+- [x] `GET /boards` — 200, array scoped to req.user
+- [x] `GET /boards/:id` — 200
+- [ ] `GET /boards/:id` other user's board — 403 *(test.todo — ownership implemented Day 11)*
+- [x] `DELETE /boards/:id` — 204
+- [ ] `DELETE /boards/:id` other user's board — 403 *(test.todo — ownership implemented Day 11)*
 
 #### Session E — Rate Limiter Test + Fix Failures
-- [ ] Write rate limiter test — loop 101 requests, assert 101st is 429
-- [ ] `docker compose -f docker-compose.test.yml exec api npx jest` — run full suite
-- [ ] Fix every failing test
-- [ ] Push commit
+- [x] Write rate limiter test — loop 101 requests, assert 101st is 429
+- [x] `docker compose -f docker-compose.test.yml exec api npx jest` — run full suite
+- [x] Fix every failing test
+- [x] Push commit
 
 ---
 
