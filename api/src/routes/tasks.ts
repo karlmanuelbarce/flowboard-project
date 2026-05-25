@@ -33,6 +33,9 @@ router.post('/', async (req: Request<{}, {}, CreateTaskInput>, res, next): Promi
     const task = await prisma.task.create({
       data: { title, description, priority, boardId },
     });
+    await prisma.auditLog.create({
+      data: { userId: req.user!.id, action: 'CREATED', entity: 'Task', entityId: task.id },
+    });
     res.status(201).json({ success: true, data: task });
   } catch (err) {
     next(err);
@@ -52,6 +55,9 @@ router.patch('/:id', async (req: Request<z.infer<typeof TaskIdParam>, {}, Update
     const { id } = TaskIdParam.parse(req.params);
     const body = UpdateTaskSchema.parse(req.body);
     const task = await prisma.task.update({ where: { id }, data: body });
+    await prisma.auditLog.create({
+      data: { userId: req.user!.id, action: 'UPDATED', entity: 'Task', entityId: task.id },
+    });
     res.json({ success: true, data: task });
   } catch (err) {
     if ((err as { code?: string }).code === 'P2025') {
@@ -65,6 +71,9 @@ router.delete('/:id', async (req: Request<z.infer<typeof TaskIdParam>>, res, nex
   try {
     const { id } = TaskIdParam.parse(req.params);
     await prisma.task.delete({ where: { id } });
+    await prisma.auditLog.create({
+      data: { userId: req.user!.id, action: 'DELETED', entity: 'Task', entityId: id },
+    });
     res.status(204).send();
   } catch (err) {
     if ((err as { code?: string }).code === 'P2025') {
