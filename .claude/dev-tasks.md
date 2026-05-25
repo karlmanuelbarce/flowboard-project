@@ -372,36 +372,36 @@
 **Commit:** `day-08: Redis Stream events, worker consumer, AuditLog integration`
 
 #### Session A — publishTaskEvent
-- [ ] Create `api/src/lib/events.ts`
-- [ ] Define `interface TaskEvent { taskId: string; action: 'CREATED' | 'UPDATED' | 'DELETED'; userId: string; payload: Record<string, unknown>; }`
-- [ ] Implement `publishTaskEvent` — `redis.xadd('tasks:events', '*', 'action', event.action, 'taskId', event.taskId, 'userId', event.userId, 'payload', JSON.stringify(event.payload), 'ts', Date.now().toString())`
-- [ ] Wrap in try/catch — log error but do NOT rethrow (publish failure must not fail the HTTP response)
+- [x] Create `api/src/lib/events.ts`
+- [x] Define `interface TaskEvent { taskId: string; action: 'CREATED' | 'UPDATED' | 'DELETED'; userId: string; payload: Record<string, unknown>; }`
+- [x] Implement `publishTaskEvent` — `redis.xadd('tasks:events', '*', 'action', event.action, 'taskId', event.taskId, 'userId', event.userId, 'payload', JSON.stringify(event.payload), 'ts', Date.now().toString())`
+- [x] Wrap in try/catch — log error but do NOT rethrow (publish failure must not fail the HTTP response)
 
 #### Session B — Wire publishTaskEvent to Task Mutations
-- [ ] In `POST /tasks`: call `publishTaskEvent({ taskId: task.id, action: 'CREATED', userId: req.user!.id, payload: { title: task.title } })` after create
-- [ ] In `PATCH /tasks/:id`: action `'UPDATED'`, payload includes changed fields
-- [ ] In `DELETE /tasks/:id`: action `'DELETED'`, payload includes `{ taskId: id }`
-- [ ] Verify: create a task, then `docker compose exec redis redis-cli XLEN tasks:events` — count increases
+- [x] In `POST /tasks`: call `publishTaskEvent({ taskId: task.id, action: 'CREATED', userId: req.user!.id, payload: { title: task.title } })` after create
+- [x] In `PATCH /tasks/:id`: action `'UPDATED'`, payload includes changed fields
+- [x] In `DELETE /tasks/:id`: action `'DELETED'`, payload includes `{ taskId: id }`
+- [x] Verify: create a task, then `docker compose exec redis redis-cli XLEN tasks:events` — count increases
 
 #### Session C — Worker Consumer Loop
-- [ ] Update `worker/src/index.ts`
-- [ ] Import `Redis` from `ioredis` and `PrismaClient` from `@prisma/client`
-- [ ] On startup: `redis.xgroup('CREATE', 'tasks:events', 'audit-group', '$', 'MKSTREAM')` — catch error with code `'BUSYGROUP'` (already exists — ok)
-- [ ] Start async loop: `while (true) { const results = await redis.xreadgroup('GROUP', 'audit-group', 'worker-1', 'COUNT', '10', 'BLOCK', 5000, 'STREAMS', 'tasks:events', '>'); if (!results) continue; ... }`
+- [x] Update `worker/src/index.ts`
+- [x] Import `Redis` from `ioredis` and `PrismaClient` from `@prisma/client`
+- [x] On startup: `redis.xgroup('CREATE', 'tasks:events', 'audit-group', '$', 'MKSTREAM')` — catch error with code `'BUSYGROUP'` (already exists — ok)
+- [x] Start async loop: `while (true) { const results = await redis.xreadgroup('GROUP', 'audit-group', 'worker-1', 'COUNT', '10', 'BLOCK', 5000, 'STREAMS', 'tasks:events', '>'); if (!results) continue; ... }`
 
 #### Session D — Event Handlers + XACK
-- [ ] Create `worker/src/handlers/taskCreated.ts`, `taskUpdated.ts`, `taskDeleted.ts`
-- [ ] Each handler: `prisma.auditLog.create({ data: { userId, action, entity: 'Task', entityId: taskId } })`
-- [ ] After successful `prisma.auditLog.create`: `await redis.xack('tasks:events', 'audit-group', messageId)`
-- [ ] In the worker loop: dispatch to correct handler based on `action` field parsed from message fields
-- [ ] Verify: `docker compose exec redis redis-cli XINFO GROUPS tasks:events` — shows `audit-group` with pending count 0 after processing
+- [x] Create `worker/src/handlers/taskCreated.ts`, `taskUpdated.ts`, `taskDeleted.ts`
+- [x] Each handler: `prisma.auditLog.create({ data: { userId, action, entity: 'Task', entityId: taskId } })`
+- [x] After successful `prisma.auditLog.create`: `await redis.xack('tasks:events', 'audit-group', messageId)`
+- [x] In the worker loop: dispatch to correct handler based on `action` field parsed from message fields
+- [x] Verify: `docker compose exec redis redis-cli XINFO GROUPS tasks:events` — shows `audit-group` with pending count 0 after processing
 
 #### Session E — Dead-Letter Queue
-- [ ] Track retry count in a `Map<string, number>` keyed by message ID
-- [ ] On handler error: increment retry count; if count < 3, log and continue (message will be redelivered)
-- [ ] If count >= 3: `await redis.lpush('tasks:events:dlq', JSON.stringify({ streamId: messageId, action, taskId, userId, payload, ts, failedAt: new Date().toISOString(), retries: 3, lastError: err.message }))`; then `await redis.xack(...)` to remove from pending
-- [ ] Test: throw deliberately in a handler; process 3 times; check `redis-cli LRANGE tasks:events:dlq 0 -1` — entry appears
-- [ ] Push commit
+- [x] Track retry count in a `Map<string, number>` keyed by message ID
+- [x] On handler error: increment retry count; if count < 3, log and continue (message will be redelivered)
+- [x] If count >= 3: `await redis.lpush('tasks:events:dlq', JSON.stringify({ streamId: messageId, action, taskId, userId, payload, ts, failedAt: new Date().toISOString(), retries: 3, lastError: err.message }))`; then `await redis.xack(...)` to remove from pending
+- [x] Test: throw deliberately in a handler; process 3 times; check `redis-cli LRANGE tasks:events:dlq 0 -1` — entry appears
+- [x] Push commit
 
 ---
 

@@ -2,6 +2,7 @@ import { Router, Request } from 'express';
 import { z } from 'zod';
 import { prisma } from '../lib/prisma';
 import { AppError } from '../errors/AppError';
+import { publishTaskEvent } from '../lib/events';
 
 const router = Router();
 
@@ -36,6 +37,7 @@ router.post('/', async (req: Request<{}, {}, CreateTaskInput>, res, next): Promi
     await prisma.auditLog.create({
       data: { userId: req.user!.id, action: 'CREATED', entity: 'Task', entityId: task.id },
     });
+    await publishTaskEvent({ taskId: task.id, action: 'CREATED', userId: req.user!.id, payload: { title: task.title } });
     res.status(201).json({ success: true, data: task });
   } catch (err) {
     next(err);
@@ -58,6 +60,7 @@ router.patch('/:id', async (req: Request<z.infer<typeof TaskIdParam>, {}, Update
     await prisma.auditLog.create({
       data: { userId: req.user!.id, action: 'UPDATED', entity: 'Task', entityId: task.id },
     });
+    await publishTaskEvent({ taskId: task.id, action: 'UPDATED', userId: req.user!.id, payload: { ...body } });
     res.json({ success: true, data: task });
   } catch (err) {
     if ((err as { code?: string }).code === 'P2025') {
@@ -74,6 +77,7 @@ router.delete('/:id', async (req: Request<z.infer<typeof TaskIdParam>>, res, nex
     await prisma.auditLog.create({
       data: { userId: req.user!.id, action: 'DELETED', entity: 'Task', entityId: id },
     });
+    await publishTaskEvent({ taskId: id, action: 'DELETED', userId: req.user!.id, payload: { taskId: id } });
     res.status(204).send();
   } catch (err) {
     if ((err as { code?: string }).code === 'P2025') {
