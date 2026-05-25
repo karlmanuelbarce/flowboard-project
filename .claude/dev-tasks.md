@@ -10,53 +10,53 @@
 > Complete before starting Day 1. This is the skeleton everything else runs on.
 
 ### Session A — Root Directory Structure
-- [ ] Create `api/src/routes/`, `api/src/middleware/`, `api/src/lib/`, `api/src/errors/`
-- [ ] Create `api/prisma/`, `api/tests/`
-- [ ] Create `worker/src/handlers/`
-- [ ] Create `nginx/`
-- [ ] Create `docker-compose.yml` (empty for now — filled in Session D)
-- [ ] Create `.env.example` (empty for now — filled in Session G)
-- [ ] Create `README.md`
+- [x] Create `api/src/routes/`, `api/src/middleware/`, `api/src/lib/`, `api/src/errors/`
+- [x] Create `api/prisma/`, `api/tests/`
+- [x] Create `worker/src/handlers/`
+- [x] Create `nginx/`
+- [x] Create `docker-compose.yml` (empty for now — filled in Session D)
+- [x] Create `.env.example` (empty for now — filled in Session G)
+- [x] Create `README.md`
 
 ### Session B — API Package Setup
-- [ ] `cd api && npm init -y`
-- [ ] Install runtime deps: `express zod @prisma/client ioredis jsonwebtoken bcrypt pino pino-http cors helmet`
-- [ ] Install dev deps: `typescript ts-node @types/node @types/express @types/bcrypt @types/jsonwebtoken @types/cors jest @types/jest supertest @types/supertest ts-jest prisma pino-pretty`
-- [ ] Create `api/tsconfig.json` — `"strict": true`, `"target": "ES2022"`, `"module": "commonjs"`, `"outDir": "dist"`, `"rootDir": "src"`, `"esModuleInterop": true`
-- [ ] Add scripts to `api/package.json`: `"dev": "ts-node src/index.ts"`, `"build": "tsc"`, `"test": "jest"`, `"test:coverage": "jest --coverage"`
-- [ ] Create `api/src/index.ts` — imports app, starts `app.listen(PORT)`
-- [ ] Create `api/jest.config.ts` — preset `ts-jest`, `testEnvironment: 'node'`, testMatch `tests/**/*.test.ts`
+- [x] `cd api && npm init -y`
+- [x] Install runtime deps: `express zod @prisma/client ioredis jsonwebtoken bcrypt pino pino-http cors helmet`
+- [x] Install dev deps: `typescript ts-node @types/node @types/express @types/bcrypt @types/jsonwebtoken @types/cors jest @types/jest supertest @types/supertest ts-jest prisma pino-pretty`
+- [x] Create `api/tsconfig.json` — `"strict": true`, `"target": "ES2022"`, `"module": "commonjs"`, `"outDir": "dist"`, `"rootDir": "src"`, `"esModuleInterop": true`
+- [x] Add scripts to `api/package.json`: `"dev": "ts-node src/index.ts"`, `"build": "tsc"`, `"test": "jest"`, `"test:coverage": "jest --coverage"`
+- [x] Create `api/src/index.ts` — imports app, starts `app.listen(PORT)`
+- [x] Create `api/jest.config.ts` — preset `ts-jest`, `testEnvironment: 'node'`, testMatch `tests/**/*.test.ts`
 
 ### Session C — Worker Package Setup
-- [ ] `cd worker && npm init -y`
-- [ ] Install runtime deps: `@prisma/client ioredis pino`
-- [ ] Install dev deps: `typescript ts-node @types/node prisma`
-- [ ] Create `worker/tsconfig.json` — same strict settings as API
-- [ ] Add scripts to `worker/package.json`: `"dev": "ts-node src/index.ts"`, `"build": "tsc"`
-- [ ] Create `worker/src/index.ts` as empty file (implemented on Day 8)
+- [x] `cd worker && npm init -y`
+- [x] Install runtime deps: `@prisma/client ioredis pino`
+- [x] Install dev deps: `typescript ts-node @types/node prisma`
+- [x] Create `worker/tsconfig.json` — same strict settings as API
+- [x] Add scripts to `worker/package.json`: `"dev": "ts-node src/index.ts"`, `"build": "tsc"`
+- [x] Create `worker/src/index.ts` as empty file (implemented on Day 8)
 
 ### Session D — docker-compose.yml
-- [ ] Define service `api` — build from `./api`, port `3000:3000`, env vars from `.env`, depends on `db` and `redis`
-- [ ] Define service `worker` — build from `./worker`, no ports, same env vars, depends on `db` and `redis`
-- [ ] Define service `db` — image `postgres:16-alpine`, port `5432:5432`, volume `pgdata:/var/lib/postgresql/data`, env `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`
-- [ ] Define service `redis` — image `redis:7-alpine`, port `6379:6379`, volume `redisdata:/data`
-- [ ] Define service `nginx` — image `nginx:alpine`, port `80:80`, volume `./nginx/nginx.conf:/etc/nginx/conf.d/default.conf`, depends on `api`
-- [ ] Define named volumes: `pgdata`, `redisdata`
-- [ ] Define network `flowboard-net`; attach all services to it
+- [x] Define service `api` — build from `./api`, port `3000:3000`, env vars from `.env`, depends on `db` and `redis`
+- [x] Define service `worker` — build from `./worker`, no ports, same env vars, depends on `db` and `redis`
+- [x] Define service `db` — image `postgres:16-alpine`, port `5432:5432`, volume `pgdata:/var/lib/postgresql/data`, env `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`
+- [x] Define service `redis` — image `redis:7-alpine`, port `6379:6379`, volume `redisdata:/data`
+- [x] Define service `nginx` — image `nginx:alpine`, port `80:80`, volume `./nginx/nginx.conf:/etc/nginx/conf.d/default.conf`, depends on `api`
+- [x] Define named volumes: `pgdata`, `redisdata`
+- [x] Define network `flowboard-net`; attach all services to it
 
 ### Session E — Dockerfiles
-- [ ] Create `api/Dockerfile` — `FROM node:22-alpine`, `WORKDIR /app`, `COPY package*.json .`, `RUN npm ci`, `COPY . .`, `RUN npx prisma generate`, `CMD ["ts-node", "src/index.ts"]`
-- [ ] Create `worker/Dockerfile` — same pattern, `CMD ["ts-node", "src/index.ts"]`
-- [ ] Create `.dockerignore` in both `api/` and `worker/` — exclude `node_modules`, `dist`, `.env`
+- [x] Create `api/Dockerfile` — `FROM node:22-alpine`, `WORKDIR /app`, `COPY package*.json .`, `RUN npm ci`, `COPY . .`, `RUN npx prisma generate`, `CMD ["ts-node", "src/index.ts"]`
+- [x] Create `worker/Dockerfile` — same pattern, `CMD ["ts-node", "src/index.ts"]`
+- [x] Create `.dockerignore` in both `api/` and `worker/` — exclude `node_modules`, `dist`, `.env`
 
 ### Session F — Nginx Config
-- [ ] Create `nginx/nginx.conf`
-- [ ] `upstream api { server api:3000; }`
-- [ ] `server { listen 80; location / { proxy_pass http://api; proxy_set_header Host $host; proxy_set_header X-Real-IP $remote_addr; } }`
+- [x] Create `nginx/nginx.conf`
+- [x] `upstream api { server api:3000; }`
+- [x] `server { listen 80; location / { proxy_pass http://api; proxy_set_header Host $host; proxy_set_header X-Real-IP $remote_addr; } }`
 
 ### Session G — Environment File
-- [ ] Create `.env` (not committed — add to `.gitignore`) copied from `.env.example`
-- [ ] Populate `.env.example` with all required vars:
+- [x] Create `.env` (not committed — add to `.gitignore`) copied from `.env.example`
+- [x] Populate `.env.example` with all required vars:
   ```
   DATABASE_URL=postgresql://postgres:password@db:5432/flowboard
   REDIS_HOST=redis
@@ -69,8 +69,8 @@
   LOG_LEVEL=info
   ALLOWED_ORIGINS=http://localhost:3000
   ```
-- [ ] Create `.gitignore` at root — include `.env`, `node_modules`, `dist`, `*.js.map`
-- [ ] Run `docker compose up -d` — confirm all 5 containers start (even if api/worker exit without app code)
+- [x] Create `.gitignore` at root — include `.env`, `node_modules`, `dist`, `*.js.map`
+- [x] Run `docker compose up -d` — confirm all 5 containers start (even if api/worker exit without app code)
 
 ---
 
@@ -83,42 +83,42 @@
 **Commit:** `day-01: environment setup, AppError, global error handler`
 
 #### Session A — Docker Stack Verification
-- [ ] `docker compose up -d` — no fatal errors
-- [ ] `docker compose ps` — db and redis show as healthy or running
-- [ ] `docker compose logs db` — PostgreSQL ready to accept connections
-- [ ] `docker compose logs redis` — Redis server started
-- [ ] `docker compose logs nginx` — nginx started (may show upstream error — ok for now)
+- [x] `docker compose up -d` — no fatal errors
+- [x] `docker compose ps` — db and redis show as healthy or running
+- [x] `docker compose logs db` — PostgreSQL ready to accept connections
+- [x] `docker compose logs redis` — Redis server started
+- [x] `docker compose logs nginx` — nginx started (may show upstream error — ok for now)
 
 #### Session B — AI Context File Review
-- [ ] Open `ai-context.md` — read every section
-- [ ] Confirm error handling pattern documented (AppError, next(err), never res.json in catch)
-- [ ] Confirm TypeScript rules documented (strict, z.infer, no `as any`)
-- [ ] Confirm response format documented (`{ success, data }` / `{ success, message, code }`)
-- [ ] Confirm DLQ format section exists (needed for Day 14 milestone verification)
+- [x] Open `ai-context.md` — read every section
+- [x] Confirm error handling pattern documented (AppError, next(err), never res.json in catch)
+- [x] Confirm TypeScript rules documented (strict, z.infer, no `as any`)
+- [x] Confirm response format documented (`{ success, data }` / `{ success, message, code }`)
+- [x] Confirm DLQ format section exists (needed for Day 14 milestone verification)
 
 #### Session C — AppError Implementation
-- [ ] Create `api/src/errors/AppError.ts`
-- [ ] `export class AppError extends Error` with constructor `(message: string, public statusCode: number, public code: string = 'INTERNAL_ERROR')`
-- [ ] Set `this.name = 'AppError'` and call `Error.captureStackTrace(this, this.constructor)`
-- [ ] Export `export function isAppError(err: unknown): err is AppError` — checks `err instanceof AppError`
-- [ ] Export `globalErrorHandler` as 4-argument Express middleware `(err, req, res, next)`
-- [ ] Handle `AppError` → `res.status(err.statusCode).json({ success: false, message: err.message, code: err.code })`
-- [ ] Handle `ZodError` → `res.status(422).json({ success: false, message: 'Validation error', code: 'VALIDATION_ERROR', errors: err.errors })`
-- [ ] Handle unknown → `res.status(500).json({ success: false, message: process.env.NODE_ENV === 'production' ? 'Internal server error' : (err as Error).message, code: 'INTERNAL_ERROR' })`
-- [ ] In production: never include `stack` in any response
+- [x] Create `api/src/errors/AppError.ts`
+- [x] `export class AppError extends Error` with constructor `(message: string, public statusCode: number, public code: string = 'INTERNAL_ERROR')`
+- [x] Set `this.name = 'AppError'` and call `Error.captureStackTrace(this, this.constructor)`
+- [x] Export `export function isAppError(err: unknown): err is AppError` — checks `err instanceof AppError`
+- [x] Export `globalErrorHandler` as 4-argument Express middleware `(err, req, res, next)`
+- [x] Handle `AppError` → `res.status(err.statusCode).json({ success: false, message: err.message, code: err.code })`
+- [x] Handle `ZodError` → `res.status(422).json({ success: false, message: 'Validation error', code: 'VALIDATION_ERROR', errors: err.errors })`
+- [x] Handle unknown → `res.status(500).json({ success: false, message: process.env.NODE_ENV === 'production' ? 'Internal server error' : (err as Error).message, code: 'INTERNAL_ERROR' })`
+- [x] In production: never include `stack` in any response
 
 #### Session D — app.ts Wiring
-- [ ] Create `api/src/app.ts` — `const app = express(); export default app;`
-- [ ] Add `app.use(express.json())` — body parser
-- [ ] Add a test route: `app.get('/test-error', () => { throw new AppError('test', 404, 'TEST') })`
-- [ ] Add `app.use(globalErrorHandler)` as the **last** `app.use` call
-- [ ] Update `api/src/index.ts` to import and start the app
+- [x] Create `api/src/app.ts` — `const app = express(); export default app;`
+- [x] Add `app.use(express.json())` — body parser
+- [x] Add a test route: `app.get('/test-error', () => { throw new AppError('test', 404, 'TEST') })`
+- [x] Add `app.use(globalErrorHandler)` as the **last** `app.use` call
+- [x] Update `api/src/index.ts` to import and start the app
 
 #### Session E — Verify and Commit
-- [ ] `docker compose exec api npx tsc --noEmit` — zero type errors
-- [ ] `docker compose exec api curl localhost:3000/test-error` — confirm `{ success: false, code: 'TEST' }`
-- [ ] Remove the test route from `app.ts`
-- [ ] Push commit
+- [x] `docker compose exec api npx tsc --noEmit` — zero type errors
+- [x] `docker compose exec api curl localhost:3000/test-error` — confirm `{ success: false, code: 'TEST' }`
+- [x] Remove the test route from `app.ts`
+- [x] Push commit
 
 ---
 
@@ -127,8 +127,8 @@
 **Commit:** `day-02: typed task routes with Zod validation`
 
 #### Session A — Prisma Client Singleton
-- [ ] Create `api/src/lib/prisma.ts`
-- [ ] Use global singleton pattern to avoid multiple PrismaClient instances during hot reload:
+- [x] Create `api/src/lib/prisma.ts`
+- [x] Use global singleton pattern to avoid multiple PrismaClient instances during hot reload:
   ```ts
   const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
   export const prisma = globalForPrisma.prisma ?? new PrismaClient();
@@ -136,34 +136,34 @@
   ```
 
 #### Session B — GET /tasks/:id
-- [ ] Create `api/src/routes/tasks.ts` — `const router = express.Router(); export default router;`
-- [ ] Define `const TaskIdParam = z.object({ id: z.string().uuid() })`
-- [ ] Implement `router.get('/:id', async (req: Request<z.infer<typeof TaskIdParam>>, res, next): Promise<void> => { ... })`
-- [ ] Parse params with `TaskIdParam.parse(req.params)` — ZodError propagates automatically to global handler
-- [ ] `prisma.task.findUnique({ where: { id } })` — throw `AppError 404 'TASK_NOT_FOUND'` if null
-- [ ] Return `res.json({ success: true, data: task })`
-- [ ] All errors go to `next(err)` — no `res.status()` inside catch
+- [x] Create `api/src/routes/tasks.ts` — `const router = express.Router(); export default router;`
+- [x] Define `const TaskIdParam = z.object({ id: z.string().uuid() })`
+- [x] Implement `router.get('/:id', async (req: Request<z.infer<typeof TaskIdParam>>, res, next): Promise<void> => { ... })`
+- [x] Parse params with `TaskIdParam.parse(req.params)` — ZodError propagates automatically to global handler
+- [x] `prisma.task.findUnique({ where: { id } })` — throw `AppError 404 'TASK_NOT_FOUND'` if null
+- [x] Return `res.json({ success: true, data: task })`
+- [x] All errors go to `next(err)` — no `res.status()` inside catch
 
 #### Session C — POST /tasks
-- [ ] Define `const CreateTaskSchema = z.object({ title: z.string().min(1).max(255), description: z.string().optional(), priority: z.enum(['LOW', 'MEDIUM', 'HIGH']).default('MEDIUM'), boardId: z.string().uuid() })`
-- [ ] Export `type CreateTaskInput = z.infer<typeof CreateTaskSchema>`
-- [ ] Implement `router.post('/', async (req: Request<{}, {}, CreateTaskInput>, res, next): Promise<void> => { ... })`
-- [ ] Parse body with `CreateTaskSchema.parse(req.body)`
-- [ ] `prisma.task.create({ data: { title, description, priority, boardId } })` — explicit fields, no spread
-- [ ] Return `res.status(201).json({ success: true, data: task })`
+- [x] Define `const CreateTaskSchema = z.object({ title: z.string().min(1).max(255), description: z.string().optional(), priority: z.enum(['LOW', 'MEDIUM', 'HIGH']).default('MEDIUM'), boardId: z.string().uuid() })`
+- [x] Export `type CreateTaskInput = z.infer<typeof CreateTaskSchema>`
+- [x] Implement `router.post('/', async (req: Request<{}, {}, CreateTaskInput>, res, next): Promise<void> => { ... })`
+- [x] Parse body with `CreateTaskSchema.parse(req.body)`
+- [x] `prisma.task.create({ data: { title, description, priority, boardId } })` — explicit fields, no spread
+- [x] Return `res.status(201).json({ success: true, data: task })`
 
 #### Session D — PATCH and DELETE
-- [ ] Define `const UpdateTaskSchema = z.object({ title: z.string().min(1).max(255).optional(), priority: z.enum(['LOW', 'MEDIUM', 'HIGH']).optional(), status: z.enum(['TODO', 'IN_PROGRESS', 'REVIEW', 'DONE']).optional() })`
-- [ ] PATCH handler: parse both `TaskIdParam` and `UpdateTaskSchema`; `prisma.task.update({ where: { id }, data: body })`; return updated task
-- [ ] Catch Prisma `P2025` error (record not found) → throw `AppError 404`
-- [ ] DELETE handler: parse `TaskIdParam`; `prisma.task.delete({ where: { id } })`; return `res.status(204).send()`
-- [ ] Catch Prisma `P2025` error → throw `AppError 404`
+- [x] Define `const UpdateTaskSchema = z.object({ title: z.string().min(1).max(255).optional(), priority: z.enum(['LOW', 'MEDIUM', 'HIGH']).optional(), status: z.enum(['TODO', 'IN_PROGRESS', 'REVIEW', 'DONE']).optional() })`
+- [x] PATCH handler: parse both `TaskIdParam` and `UpdateTaskSchema`; `prisma.task.update({ where: { id }, data: body })`; return updated task
+- [x] Catch Prisma `P2025` error (record not found) → throw `AppError 404`
+- [x] DELETE handler: parse `TaskIdParam`; `prisma.task.delete({ where: { id } })`; return `res.status(204).send()`
+- [x] Catch Prisma `P2025` error → throw `AppError 404`
 
 #### Session E — Mount and Type Check
-- [ ] Mount tasks router in `app.ts`: `app.use('/tasks', tasksRouter)`
-- [ ] `docker compose exec api npx tsc --noEmit` — fix every error
-- [ ] No `any` types; all handlers return `Promise<void>`; all params/bodies use `z.infer`
-- [ ] Push commit
+- [x] Mount tasks router in `app.ts`: `app.use('/tasks', tasksRouter)`
+- [x] `docker compose exec api npx tsc --noEmit` — fix every error
+- [x] No `any` types; all handlers return `Promise<void>`; all params/bodies use `z.infer`
+- [x] Push commit
 
 ---
 

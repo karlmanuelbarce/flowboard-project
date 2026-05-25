@@ -7,6 +7,7 @@
 ---
 
 ## Pre-Day 1 — Project Scaffolding (Do Before Day 1 Commit)
+**[Pre-Day 1 — COMPLETE]**
 
 Before writing any application code, the project skeleton must exist.
 
@@ -29,7 +30,7 @@ Before writing any application code, the project skeleton must exist.
 
 ---
 
-### Day 1 — Docker Stack, AI Context, AppError
+### Day 1 — Docker Stack, AI Context, AppError ✓
 
 **Goal:** All 5 Docker services start. AI context file is live. AppError class and global error handler committed.
 
@@ -42,11 +43,11 @@ Before writing any application code, the project skeleton must exist.
 - Session D: Create `api/src/app.ts` — Express app with `express.json()` and `globalErrorHandler` wired as last middleware
 - Session E: Verify with a deliberate throw — confirm `{ success: false, message, code }` response shape; run `npx tsc --noEmit`
 
-**Commit:** `day-01: environment setup, AppError, global error handler`
+**Commit:** `day-01: environment setup, AppError, global error handler` ✓
 
 ---
 
-### Day 2 — TypeScript Route Layer (Tasks)
+### Day 2 — TypeScript Route Layer (Tasks) ✓
 
 **Goal:** All four task endpoints typed end-to-end. `npx tsc --noEmit` passes with zero errors.
 
@@ -59,7 +60,7 @@ Before writing any application code, the project skeleton must exist.
 - Session D: Define `UpdateTaskSchema` (all fields optional), implement `PATCH /tasks/:id` and `DELETE /tasks/:id` (204)
 - Session E: Mount tasks router in `app.ts`; run `npx tsc --noEmit` — fix every type error before committing
 
-**Commit:** `day-02: typed task routes with Zod validation`
+**Commit:** `day-02: typed task routes with Zod validation` ✓
 
 ---
 
